@@ -1,0 +1,38 @@
+buildscript {
+    repositories {
+        maven {
+            url = 'https://snapshots.elastic.co/maven/'
+        }
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.elasticsearch.gradle:build-tools:7.17.14"
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'elasticsearch.java-rest-test'
+
+group = 'org.example'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'co.elastic.clients:elasticsearch-java:7.17.14'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.12.3'
+
+
+    javaRestTestImplementation 'org.elasticsearch.test:framework:7.17.14'
+    javaRestTestImplementation 'co.elastic.clients:elasticsearch-java:7.17.14'
+    javaRestTestImplementation 'com.fasterxml.jackson.core:jackson-databind:2.12.3'
+    javaRestTestImplementation project(path: ':')
+}
+
+tasks.named("javaRestTest").configure {
+    // Otherwise we cannot do much in the tests
+    systemProperty 'tests.security.manager', 'false'
+}
+
